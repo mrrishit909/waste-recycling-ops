@@ -1,0 +1,1078 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "waste-recycling-ops",
+  "version": "1.0.0"
+ },
+ "paths": {
+  "/v1/jobs/{job_id}": {
+   "get": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "Status, attempts and result of a long-running job",
+    "operationId": "job_status_v1_jobs__job_id__get",
+    "parameters": [
+     {
+      "name": "job_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "format": "uuid",
+       "title": "Job Id"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/jobs": {
+   "get": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "Jobs by status; status=dead is the dead-letter view",
+    "operationId": "job_list_v1_jobs_get",
+    "parameters": [
+     {
+      "name": "status",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "default": "dead",
+       "title": "Status"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/audit": {
+   "get": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "Latest audit events and whether the hash chain verifies",
+    "operationId": "audit_log_v1_audit_get",
+    "parameters": [
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "default": 50,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/district:load": {
+   "post": {
+    "tags": [
+     "district"
+    ],
+    "summary": "(+) Load the invented district on a Friday evening: 500 smart containers, eight weeks of readings and pickups under the fixed schedule, trucks, facilities and material prices; fit the fill rates and back-test them",
+    "operationId": "load_district_v1_district_load_post",
+    "parameters": [
+     {
+      "name": "Idempotency-Key",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Idempotency-Key"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LoadIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "202": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/telemetry:poll": {
+   "post": {
+    "tags": [
+     "telemetry"
+    ],
+    "summary": "(+) The gateway delivers the next hours of readings and the clock moves; stands in for the sensor feed",
+    "operationId": "poll_v1_telemetry_poll_post",
+    "parameters": [
+     {
+      "name": "Idempotency-Key",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Idempotency-Key"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PollIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "202": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/telemetry/fill": {
+   "post": {
+    "tags": [
+     "telemetry"
+    ],
+    "summary": "Fill readings from sensors: unknown sensors, impossible values, future timestamps and readings older than the last one stored are refused one by one",
+    "operationId": "telemetry_v1_telemetry_fill_post",
+    "parameters": [
+     {
+      "name": "Idempotency-Key",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Idempotency-Key"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TelemetryIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/containers/risk": {
+   "get": {
+    "tags": [
+     "containers"
+    ],
+    "summary": "Overflow risk per container at 8, 24 and 48 hours from its last reading and its own fill rates by weekday; stale sensors flagged",
+    "operationId": "containers_risk_v1_containers_risk_get",
+    "parameters": [
+     {
+      "name": "min_p",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "number",
+       "maximum": 1,
+       "minimum": 0,
+       "default": 0.0,
+       "title": "Min P"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 500,
+       "minimum": 1,
+       "default": 60,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/routes/optimize": {
+   "post": {
+    "tags": [
+     "routes"
+    ],
+    "summary": "Today's collection: the containers the risk policy picks, routed by a capacitated VRP with stream and time constraints over two trips per truck; the fixed weekly schedule run nearest-first beside it, both scored on the hidden truth",
+    "operationId": "optimize_v1_routes_optimize_post",
+    "parameters": [
+     {
+      "name": "Idempotency-Key",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Idempotency-Key"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RoutesIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/fleet/today": {
+   "get": {
+    "tags": [
+     "routes"
+    ],
+    "summary": "Each truck's trips today in order, with kilometres, load and the stops, from the stored plan",
+    "operationId": "fleet_v1_fleet_today_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/vision/classify": {
+   "post": {
+    "tags": [
+     "vision"
+    ],
+    "summary": "Conveyor frames classified as paper, plastic, metal, organics, glass or contamination by a toy classifier on schematic images; an alert when contamination in the batch passes a share",
+    "operationId": "classify_v1_vision_classify_post",
+    "parameters": [
+     {
+      "name": "Idempotency-Key",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Idempotency-Key"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/VisionIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/facilities/capacity": {
+   "get": {
+    "tags": [
+     "facilities"
+    ],
+    "summary": "Each facility's daily capacity, what has been sent today, what remains, the streams it takes and today's material prices",
+    "operationId": "capacity_v1_facilities_capacity_get",
+    "parameters": [
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/v1/materials/destination": {
+   "post": {
+    "tags": [
+     "facilities"
+    ],
+    "summary": "Send each load to the facility that maximises material value less haul cost within what each can still take today (a linear programme); the nearest accepting facility beside it, with what it would turn away",
+    "operationId": "destination_v1_materials_destination_post",
+    "parameters": [
+     {
+      "name": "Idempotency-Key",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Idempotency-Key"
+      }
+     },
+     {
+      "name": "authorization",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Authorization"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/DestinationIn"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "DestinationIn": {
+    "properties": {
+     "loads": {
+      "items": {
+       "$ref": "#/components/schemas/Load"
+      },
+      "type": "array",
+      "maxItems": 40,
+      "title": "Loads"
+     },
+     "from_plan": {
+      "type": "boolean",
+      "title": "From Plan",
+      "description": "add today's planned trips as loads, one per trip and stream, from where their last stop is",
+      "default": false
+     },
+     "apply": {
+      "type": "boolean",
+      "title": "Apply",
+      "description": "record the deliveries, so facility capacity is consumed",
+      "default": false
+     }
+    },
+    "type": "object",
+    "title": "DestinationIn"
+   },
+   "HTTPValidationError": {
+    "properties": {
+     "detail": {
+      "items": {
+       "$ref": "#/components/schemas/ValidationError"
+      },
+      "type": "array",
+      "title": "Detail"
+     }
+    },
+    "type": "object",
+    "title": "HTTPValidationError"
+   },
+   "Load": {
+    "properties": {
+     "vehicle": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Vehicle"
+     },
+     "stream": {
+      "type": "string",
+      "enum": [
+       "residual",
+       "recycling",
+       "organics",
+       "glass"
+      ],
+      "title": "Stream"
+     },
+     "kg": {
+      "type": "number",
+      "maximum": 20000.0,
+      "exclusiveMinimum": 0.0,
+      "title": "Kg"
+     },
+     "at": {
+      "items": {
+       "type": "number"
+      },
+      "type": "array",
+      "maxItems": 2,
+      "minItems": 2,
+      "title": "At",
+      "description": "where the truck is, km on the grid"
+     }
+    },
+    "type": "object",
+    "required": [
+     "stream",
+     "kg",
+     "at"
+    ],
+    "title": "Load"
+   },
+   "LoadIn": {
+    "properties": {
+     "seed": {
+      "type": "integer",
+      "maximum": 1000000.0,
+      "minimum": 0.0,
+      "title": "Seed",
+      "default": 17
+     }
+    },
+    "type": "object",
+    "title": "LoadIn"
+   },
+   "Policy": {
+    "properties": {
+     "p_overflow_24h": {
+      "type": "number",
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "P Overflow 24H",
+      "description": "collect if the chance of overflowing in 24 hours is at least this",
+      "default": 0.3
+     },
+     "expected_24h": {
+      "type": "number",
+      "maximum": 130.0,
+      "minimum": 0.0,
+      "title": "Expected 24H",
+      "description": "or if the expected fill in 24 hours is at least this",
+      "default": 80
+     }
+    },
+    "type": "object",
+    "title": "Policy"
+   },
+   "PollIn": {
+    "properties": {
+     "hours": {
+      "type": "integer",
+      "maximum": 48.0,
+      "minimum": 1.0,
+      "title": "Hours"
+     }
+    },
+    "type": "object",
+    "required": [
+     "hours"
+    ],
+    "title": "PollIn"
+   },
+   "Reading": {
+    "properties": {
+     "sensor_id": {
+      "type": "string",
+      "maxLength": 40,
+      "title": "Sensor Id"
+     },
+     "ts": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Ts"
+     },
+     "fill_pct": {
+      "type": "number",
+      "title": "Fill Pct"
+     },
+     "temp_c": {
+      "anyOf": [
+       {
+        "type": "number"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Temp C"
+     },
+     "battery_pct": {
+      "anyOf": [
+       {
+        "type": "number",
+        "maximum": 100.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Battery Pct"
+     }
+    },
+    "type": "object",
+    "required": [
+     "sensor_id",
+     "ts",
+     "fill_pct"
+    ],
+    "title": "Reading"
+   },
+   "RoutesIn": {
+    "properties": {
+     "policy": {
+      "$ref": "#/components/schemas/Policy"
+     },
+     "time_limit_s": {
+      "type": "integer",
+      "maximum": 30.0,
+      "minimum": 2.0,
+      "title": "Time Limit S",
+      "default": 8
+     }
+    },
+    "type": "object",
+    "title": "RoutesIn"
+   },
+   "TelemetryIn": {
+    "properties": {
+     "readings": {
+      "items": {
+       "$ref": "#/components/schemas/Reading"
+      },
+      "type": "array",
+      "maxItems": 2000,
+      "minItems": 1,
+      "title": "Readings"
+     }
+    },
+    "type": "object",
+    "required": [
+     "readings"
+    ],
+    "title": "TelemetryIn"
+   },
+   "ValidationError": {
+    "properties": {
+     "loc": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "type": "array",
+      "title": "Location"
+     },
+     "msg": {
+      "type": "string",
+      "title": "Message"
+     },
+     "type": {
+      "type": "string",
+      "title": "Error Type"
+     },
+     "input": {
+      "title": "Input"
+     },
+     "ctx": {
+      "type": "object",
+      "title": "Context"
+     }
+    },
+    "type": "object",
+    "required": [
+     "loc",
+     "msg",
+     "type"
+    ],
+    "title": "ValidationError"
+   },
+   "VisionIn": {
+    "properties": {
+     "facility": {
+      "type": "string",
+      "maxLength": 60,
+      "title": "Facility"
+     },
+     "images_png_base64": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "maxItems": 64,
+      "minItems": 1,
+      "title": "Images Png Base64"
+     },
+     "contamination_alert_share": {
+      "type": "number",
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Contamination Alert Share",
+      "default": 0.1
+     }
+    },
+    "type": "object",
+    "required": [
+     "facility",
+     "images_png_base64"
+    ],
+    "title": "VisionIn"
+   }
+  }
+ }
+}
